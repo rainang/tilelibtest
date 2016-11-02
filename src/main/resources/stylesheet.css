@@ -7,13 +7,37 @@
     -fx-font: 12px "Consolas";
 }
 
+.control-pane {
+    -fx-border-color: darkgray;
+    -fx-border-width: 1 2 1 2;
+    -fx-border-radius: 4;
+    -fx-padding: 8;
+    -fx-spacing: 4;
+}
+
+.view-pane {
+    -fx-vgap: 2;
+    -fx-hgap: 16;
+}
+
+.control-panel {
+    -fx-fill-width: true;
+    -fx-spacing: 8;
+}
+
+.main {
+    -fx-padding: 8;
+    -fx-fill-height: true;
+    -fx-spacing: 8;
+}
+
 .int-field {
     -fx-pref-width: 40;
 }
 
 /* follows int-field width */
 .coordinate-field {
-    -fx-hgap: 2;
+    -fx-spacing: 2;
     -fx-pref-width: 82;
 }
 
@@ -42,28 +66,4 @@
 
 .labeled-node-l#data {
     -fx-pref-width: 50;
-}
-
-.control-pane {
-    -fx-border-color: darkgray;
-    -fx-border-width: 1 2 1 2;
-    -fx-border-radius: 4;
-    -fx-padding: 8;
-    -fx-spacing: 4;
-}
-
-.view-pane {
-    -fx-vgap: 2;
-    -fx-hgap: 16;
-}
-
-.control-panel {
-    -fx-fill-width: true;
-    -fx-spacing: 8;
-}
-
-.main {
-    -fx-padding: 8;
-    -fx-fill-height: true;
-    -fx-spacing: 8;
 }

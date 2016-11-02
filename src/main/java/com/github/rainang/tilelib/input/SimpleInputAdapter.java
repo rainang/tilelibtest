@@ -1,33 +1,35 @@
 package com.github.rainang.tilelib.input;
 
-import com.github.rainang.tilelib.TileCanvasStack;
+import com.github.rainang.tilelib.canvas.TileCanvasStack;
+import com.github.rainang.tilelib.coordinates.Coordinate;
 import com.github.rainang.tilelib.coordinates.CoordinateD;
-import com.github.rainang.tilelib.coordinates.HexCoordinate;
+import com.github.rainang.tilelib.layout.Layout;
 import com.github.rainang.tilelib.properties.CoordinateDProperty;
 import com.github.rainang.tilelib.properties.CoordinateProperty;
-import com.github.rainang.tilelib.properties.HexTileProperty;
-import com.github.rainang.tilelib.tiles.HexTile;
+import com.github.rainang.tilelib.properties.TileProperty;
+import com.github.rainang.tilelib.tiles.Tile;
 
-public class SimpleInputAdapter<T extends HexTile> implements InputAdapter<T>
+public class SimpleInputAdapter<L extends Layout<C>, C extends Coordinate, T extends Tile> implements InputAdapter<L,
+		C, T>
 {
-	private final TileCanvasStack<HexCoordinate, T> canvas;
+	private final TileCanvasStack<L, C, T> canvas;
 	
 	private final CoordinateDProperty<CoordinateD> mousePos = new CoordinateDProperty<>(this, "mouse_pos");
 	
-	private final CoordinateProperty<HexCoordinate> mouseover = new CoordinateProperty<>(this, "mouseover");
+	private final CoordinateProperty<C> mouseover = new CoordinateProperty<>(this, "mouseover");
 	
-	private final HexTileProperty<T> mouseTile = new HexTileProperty<>(this, "mouse_tile");
+	private final TileProperty<T> mouseTile = new TileProperty<>(this, "mouse_tile");
 	
-	private final HexTileProperty<T> focusTile = new HexTileProperty<>(this, "focus_tile");
+	private final TileProperty<T> focusTile = new TileProperty<>(this, "focus_tile");
 	
-	public SimpleInputAdapter(TileCanvasStack<HexCoordinate, T> canvas)
+	public SimpleInputAdapter(TileCanvasStack<L, C, T> canvas)
 	{
 		this.canvas = canvas;
 		init();
 	}
 	
 	@Override
-	public TileCanvasStack<HexCoordinate, T> getCanvasStack()
+	public TileCanvasStack<L, C, T> getCanvasStack()
 	{
 		return canvas;
 	}
@@ -39,19 +41,19 @@ public class SimpleInputAdapter<T extends HexTile> implements InputAdapter<T>
 	}
 	
 	@Override
-	public CoordinateProperty<HexCoordinate> mouseoverProperty()
+	public CoordinateProperty<C> mouseoverProperty()
 	{
 		return mouseover;
 	}
 	
 	@Override
-	public HexTileProperty<T> mouseTileProperty()
+	public TileProperty<T> mouseTileProperty()
 	{
 		return mouseTile;
 	}
 	
 	@Override
-	public HexTileProperty<T> focusTileProperty()
+	public TileProperty<T> focusTileProperty()
 	{
 		return focusTile;
 	}

@@ -1,28 +1,28 @@
 package com.github.rainang.tilelib.input;
 
-import com.github.rainang.tilelib.TileCanvasStack;
+import com.github.rainang.tilelib.canvas.TileCanvasStack;
+import com.github.rainang.tilelib.coordinates.Coordinate;
 import com.github.rainang.tilelib.coordinates.CoordinateD;
-import com.github.rainang.tilelib.coordinates.Hex;
-import com.github.rainang.tilelib.coordinates.HexCoordinate;
+import com.github.rainang.tilelib.layout.Layout;
 import com.github.rainang.tilelib.properties.CoordinateDProperty;
 import com.github.rainang.tilelib.properties.CoordinateProperty;
-import com.github.rainang.tilelib.properties.HexTileProperty;
-import com.github.rainang.tilelib.tiles.HexTile;
+import com.github.rainang.tilelib.properties.TileProperty;
+import com.github.rainang.tilelib.tiles.Tile;
 
-public interface InputAdapter<T extends HexTile>
+public interface InputAdapter<L extends Layout<C>, C extends Coordinate, T extends Tile>
 {
-	TileCanvasStack<HexCoordinate, T> getCanvasStack();
+	TileCanvasStack<L, C, T> getCanvasStack();
 	
 	default void init()
 	{
 		getCanvasStack().setOnMouseMoved(e -> mousePosProperty().set(CoordinateD.create(e.getX(), e.getY())));
-		mousePosProperty().addListener((a, b, c) -> mouseoverProperty().set(getLayout().pixelToHex(c)));
+		mousePosProperty().addListener((a, b, c) -> mouseoverProperty().set(getLayout().fromPixel(c)));
 		mouseoverProperty().addListener((a, b, c) -> mouseTileProperty().set(getCanvasStack().getTile(c)));
 		
 		getCanvasStack().setOnMouseClicked(e -> focusTileProperty().set(getMouseTile()));
 	}
 	
-	default Hex.Layout getLayout()
+	default L getLayout()
 	{
 		return getCanvasStack().getLayout();
 	}
@@ -31,18 +31,18 @@ public interface InputAdapter<T extends HexTile>
 	
 	CoordinateDProperty<CoordinateD> mousePosProperty();
 	
-	CoordinateProperty<HexCoordinate> mouseoverProperty();
+	CoordinateProperty<C> mouseoverProperty();
 	
-	HexTileProperty<T> mouseTileProperty();
+	TileProperty<T> mouseTileProperty();
 	
-	HexTileProperty<T> focusTileProperty();
+	TileProperty<T> focusTileProperty();
 	
 	default CoordinateD getMousePos()
 	{
 		return mousePosProperty().get();
 	}
 	
-	default HexCoordinate getMouseover()
+	default Coordinate getMouseover()
 	{
 		return mouseoverProperty().get();
 	}

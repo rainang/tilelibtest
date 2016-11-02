@@ -71,18 +71,17 @@ abstract class ShapeControlPane extends VBox
 	
 	boolean createMap(HexStack canvas)
 	{
-		ColoredTile tile = canvas.getInputAdapter()
-								 .getFocusTile();
+		HexTile tile = canvas.getInputAdapter()
+							 .getFocusTile();
 		if (tile == null)
 			return false;
 		List<HexCoordinate> filter = new ArrayList<>();
 		search(tile.getPos(), filter::add);
-		List<ColoredTile> list = filter.stream()
-									   .map(canvas::getTile)
-									   .filter(t -> t != null)
-									   .collect(Collectors.toList());
-		canvas.getLayer("High")
-			  .setRenderListSupplier(() -> list);
+		List<HexTile> list = filter.stream()
+								   .map(canvas::getTile)
+								   .filter(t -> t != null)
+								   .collect(Collectors.toList());
+		canvas.setLayerRenderListSupplier("High", () -> list);
 		canvas.paintHighlights();
 		return true;
 	}

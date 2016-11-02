@@ -40,7 +40,7 @@ class DataControl extends VBox
 			  .addListener((a, b, c) -> setLabelText(lblMT, (c != null) + ""));
 		canvas.getInputAdapter()
 			  .focusTileProperty()
-			  .addListener((a, b, c) -> setLabelText(lblFT, c.getPos() + ""));
+			  .addListener((a, b, c) -> setLabelText(lblFT, c + ""));
 		
 		getChildren().addAll(lbl0, lbl1, lbl2, lbl3);
 	}

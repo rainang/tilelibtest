@@ -2,6 +2,7 @@ package com.github.rainang.tilelib.test;
 
 import com.github.rainang.tilelib.coordinates.HexCoordinate;
 import com.github.rainang.tilelib.coordinates.HexFinder;
+import com.github.rainang.tilelib.tiles.HexTile;
 import com.github.rainang.tilelib.tiles.HexTileMap;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -71,8 +72,21 @@ public class TileLibTest extends Application
 			   }
 		   });
 		
-		HexTileMap<ColoredTile> m = new HexTileMap<>();
-		HEX_FINDER.range(HexCoordinate.create(0, 0), 10, c -> m.put(c, new ColoredTile(c)));
+		HexTileMap<HexTile> m = new HexTileMap<>();
+		HEX_FINDER.range(HexCoordinate.create(0, 0), 10, c -> m.put(c, new HexTile()
+		{
+			@Override
+			public HexCoordinate getPos()
+			{
+				return c;
+			}
+			
+			@Override
+			public String toString()
+			{
+				return getPos().toString();
+			}
+		}));
 		canvas.setTiles(m);
 		
 		cmb.getSelectionModel()

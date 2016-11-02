@@ -1,14 +1,15 @@
 package com.github.rainang.tilelib.test;
 
-import com.github.rainang.tilelib.CoordinateField;
+import com.github.rainang.tilelib.control.CoordinateField;
 import com.github.rainang.tilelib.control.LabeledNode;
 import com.github.rainang.tilelib.coordinates.Coordinate;
-import com.github.rainang.tilelib.coordinates.Hex;
+import com.github.rainang.tilelib.layout.HexOrientation;
+import com.github.rainang.tilelib.layout.Layout;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-import static com.github.rainang.tilelib.coordinates.Hex.Orientation.FLAT;
-import static com.github.rainang.tilelib.coordinates.Hex.Orientation.POINTY;
+import static com.github.rainang.tilelib.layout.HexOrientation.FLAT;
+import static com.github.rainang.tilelib.layout.HexOrientation.POINTY;
 
 class LayoutControl extends VBox
 {
@@ -29,7 +30,7 @@ class LayoutControl extends VBox
 				 .add("layout-button");
 		btnOrient.setOnAction(e ->
 		{
-			Hex.Orientation orientation;
+			HexOrientation orientation;
 			if (btnOrient.getText()
 						 .equals(FLAT.name()))
 			{
@@ -40,7 +41,7 @@ class LayoutControl extends VBox
 				btnOrient.setText(FLAT.name());
 				orientation = FLAT;
 			}
-			canvas.setLayout(new Hex.Layout(orientation, canvas.getLayout().size, canvas.getLayout().origin, 0.3));
+			canvas.setLayout(new Layout.Hex(orientation, canvas.getLayout().size, canvas.getLayout().origin, 0.3));
 		});
 		
 		size.coordinateProperty()
@@ -54,7 +55,7 @@ class LayoutControl extends VBox
 	
 	private void onLayoutChanged(HexStack canvas)
 	{
-		Hex.Layout layout = canvas.getLayout();
-		canvas.setLayout(new Hex.Layout(layout.orientation, size.getCoordinateD(), offset.getCoordinateD(), 0.3));
+		Layout.Hex layout = canvas.getLayout();
+		canvas.setLayout(new Layout.Hex(layout.orientation, size.getCoordinateD(), offset.getCoordinateD(), 0.3));
 	}
 }

@@ -1,10 +1,11 @@
-package com.github.rainang.tilelib;
+package com.github.rainang.tilelib.canvas;
 
 import com.github.rainang.tilelib.coordinates.Coordinate;
 import com.github.rainang.tilelib.tiles.Tile;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 import java.util.Collection;
@@ -12,41 +13,23 @@ import java.util.Collections;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class TileCanvas<C extends Coordinate, T extends Tile> extends Canvas implements Comparable<TileCanvas<C, T>>
+public class TileCanvas<C extends Coordinate, T extends Tile> extends Canvas
 {
 	private final String name;
 	
 	private Supplier<Collection<T>> renderListSupplier = () -> Collections.EMPTY_LIST;
 	
-	private BiConsumer<TileCanvas<C, T>, T> painter = (gc, t) ->
+	private BiConsumer<GraphicsContext, T> painter = (gc, t) ->
 	{
 	};
-	
-	private int priority;
 	
 	private boolean clearOnPaint = true;
 	
 	// CONSTRUCTORS
 	
-	public TileCanvas(String name)
-	{
-		this(name, 500, 500);
-	}
-	
-	public TileCanvas(String name, int width, int height)
-	{
-		this(name, 0, width, height);
-	}
-	
-	public TileCanvas(String name, int priority)
-	{
-		this(name, priority, 500, 500);
-	}
-	
-	public TileCanvas(String name, int priority, int width, int height)
+	TileCanvas(String name, double width, double height)
 	{
 		this.name = name;
-		this.priority = priority;
 		
 		setWidth(width);
 		setHeight(height);
@@ -55,14 +38,8 @@ public class TileCanvas<C extends Coordinate, T extends Tile> extends Canvas imp
 		gc.setLineWidth(1);
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.setTextBaseline(VPos.CENTER);
-	}
-	
-	// IMPLEMENTATIONS
-	
-	@Override
-	public int compareTo(TileCanvas<C, T> o)
-	{
-		return priority == o.priority ? 0 : priority > o.priority ? 1 : -1;
+		gc.setFill(Color.LIGHTGRAY);
+		gc.setStroke(Color.BLACK);
 	}
 	
 	// GETTERS & SETTERS
@@ -72,24 +49,14 @@ public class TileCanvas<C extends Coordinate, T extends Tile> extends Canvas imp
 		return name;
 	}
 	
-	public BiConsumer<TileCanvas<C, T>, T> getPainter()
+	public BiConsumer<GraphicsContext, T> getPainter()
 	{
 		return painter;
 	}
 	
-	public void setPainter(BiConsumer<TileCanvas<C, T>, T> painter)
+	public void setPainter(BiConsumer<GraphicsContext, T> painter)
 	{
 		this.painter = painter;
-	}
-	
-	public int getPriority()
-	{
-		return priority;
-	}
-	
-	public void setPriority(int priority)
-	{
-		this.priority = priority;
 	}
 	
 	public boolean isClearOnPaint()
@@ -102,7 +69,7 @@ public class TileCanvas<C extends Coordinate, T extends Tile> extends Canvas imp
 		this.clearOnPaint = clearOnPaint;
 	}
 	
-	public void setRenderListSupplier(Supplier<Collection<T>> renderListSupplier)
+	void setRenderListSupplier(Supplier<Collection<T>> renderListSupplier)
 	{
 		this.renderListSupplier = renderListSupplier;
 	}
@@ -119,8 +86,6 @@ public class TileCanvas<C extends Coordinate, T extends Tile> extends Canvas imp
 		if (clearOnPaint)
 			clear();
 		for (T t : renderListSupplier.get())
-		{
-			painter.accept(this, t);
-		}
+			painter.accept(getGraphicsContext2D(), t);
 	}
 }
