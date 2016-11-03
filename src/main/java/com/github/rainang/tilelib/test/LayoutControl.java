@@ -2,9 +2,9 @@ package com.github.rainang.tilelib.test;
 
 import com.github.rainang.tilelib.control.CoordinateField;
 import com.github.rainang.tilelib.control.LabeledNode;
-import com.github.rainang.tilelib.coordinates.Coordinate;
 import com.github.rainang.tilelib.layout.HexOrientation;
 import com.github.rainang.tilelib.layout.Layout;
+import com.github.rainang.tilelib.point.Point;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
@@ -15,8 +15,8 @@ class LayoutControl extends VBox
 {
 	private final Button btnOrient = new Button(POINTY.name());
 	
-	private final CoordinateField size = new CoordinateField(Coordinate.create(15, 15), -64, 64);
-	private final CoordinateField offset = new CoordinateField(Coordinate.create(250, 250), -500, 500);
+	private final CoordinateField size = new CoordinateField(Point.create(15, 15), -64, 64);
+	private final CoordinateField offset = new CoordinateField(Point.create(250, 250), -500, 500);
 	
 	LayoutControl(HexStack canvas)
 	{

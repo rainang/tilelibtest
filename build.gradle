@@ -1,8 +1,8 @@
 apply plugin: 'java'
 
 group 'com.github.rainang'
-version '1.0.0-alpha'
-def libVersion = '1.0.1-alpha'
+version '2.0.0-alpha'
+def libVersion = '2.0.0-alpha'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

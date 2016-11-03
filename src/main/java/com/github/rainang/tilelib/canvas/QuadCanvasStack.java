@@ -1,27 +1,26 @@
 package com.github.rainang.tilelib.canvas;
 
-import com.github.rainang.tilelib.coordinates.Coordinate;
-import com.github.rainang.tilelib.coordinates.CoordinateD;
+import com.github.rainang.tilelib.board.Board;
+import com.github.rainang.tilelib.board.tile.Tile;
 import com.github.rainang.tilelib.layout.Layout;
-import com.github.rainang.tilelib.tiles.Tile;
+import com.github.rainang.tilelib.point.PointD;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.function.BiConsumer;
 
-public class QuadCanvasStack<T extends Tile> extends TileCanvasStack<Layout.Quad, Coordinate, T>
+public class QuadCanvasStack<T extends Tile, B extends Board<T>> extends TileCanvasStack<Layout.Quad, T, B>
 {
-	
 	protected final BiConsumer<GraphicsContext, T> defaultTilePainter = (gc, t) ->
 	{
-		CoordinateD s = getLayout().size;
-		CoordinateD c = getLayout().toPixel(t.getPos());
+		PointD s = getLayout().size;
+		PointD c = getLayout().toPixel(t.getPos());
 		gc.fillRect(c.x() - s.x(), c.y() - s.y(), c.x() + s.x(), c.y() + s.y());
 	};
 	
 	protected final BiConsumer<GraphicsContext, T> defaultGridPainter = (gc, t) ->
 	{
-		CoordinateD s = getLayout().size;
-		CoordinateD c = getLayout().toPixel(t.getPos());
+		PointD s = getLayout().size;
+		PointD c = getLayout().toPixel(t.getPos());
 		gc.strokeRect(c.x() - s.x(), c.y() - s.y(), c.x() + s.x(), c.y() + s.y());
 	};
 	

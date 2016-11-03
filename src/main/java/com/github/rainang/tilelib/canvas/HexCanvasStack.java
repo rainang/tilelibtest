@@ -1,18 +1,18 @@
 package com.github.rainang.tilelib.canvas;
 
-import com.github.rainang.tilelib.coordinates.HexCoordinate;
+import com.github.rainang.tilelib.board.Board;
+import com.github.rainang.tilelib.board.tile.Tile;
 import com.github.rainang.tilelib.layout.Layout;
-import com.github.rainang.tilelib.tiles.HexTile;
-import com.github.rainang.tilelib.tiles.TileMapBase;
+import com.github.rainang.tilelib.point.Point;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class HexCanvasStack<T extends HexTile> extends TileCanvasStack<Layout.Hex, HexCoordinate, T>
+public class HexCanvasStack<T extends Tile, B extends Board<T>> extends TileCanvasStack<Layout.Hex, T, B>
 {
-	protected final Map<HexCoordinate, double[][]> renderCache = new HashMap<>();
+	protected final Map<Point, double[][]> renderCache = new HashMap<>();
 	
 	protected final BiConsumer<GraphicsContext, T> defaultTilePainter = (gc, t) ->
 	{
@@ -34,9 +34,9 @@ public class HexCanvasStack<T extends HexTile> extends TileCanvasStack<Layout.He
 	}
 	
 	@Override
-	public void setTiles(TileMapBase<HexCoordinate, T> tiles)
+	public void setBoard(B board)
 	{
-		this.tiles = tiles;
+		this.board = board;
 		refreshCache();
 		paint();
 	}
@@ -57,7 +57,7 @@ public class HexCanvasStack<T extends HexTile> extends TileCanvasStack<Layout.He
 		if (!canPaint())
 			return;
 		renderCache.clear();
-		getTiles().keySet()
+		getBoard().getCoordinates()
 				  .forEach(hex ->
 				  {
 					  double xPoints[] = new double[7];

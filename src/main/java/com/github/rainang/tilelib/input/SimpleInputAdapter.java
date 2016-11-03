@@ -1,47 +1,45 @@
 package com.github.rainang.tilelib.input;
 
+import com.github.rainang.tilelib.board.Board;
+import com.github.rainang.tilelib.board.tile.Tile;
 import com.github.rainang.tilelib.canvas.TileCanvasStack;
-import com.github.rainang.tilelib.coordinates.Coordinate;
-import com.github.rainang.tilelib.coordinates.CoordinateD;
 import com.github.rainang.tilelib.layout.Layout;
 import com.github.rainang.tilelib.properties.CoordinateDProperty;
 import com.github.rainang.tilelib.properties.CoordinateProperty;
 import com.github.rainang.tilelib.properties.TileProperty;
-import com.github.rainang.tilelib.tiles.Tile;
 
-public class SimpleInputAdapter<L extends Layout<C>, C extends Coordinate, T extends Tile> implements InputAdapter<L,
-		C, T>
+public class SimpleInputAdapter<L extends Layout, T extends Tile, B extends Board<T>> implements InputAdapter<L, T, B>
 {
-	private final TileCanvasStack<L, C, T> canvas;
+	private final TileCanvasStack<L, T, B> canvas;
 	
-	private final CoordinateDProperty<CoordinateD> mousePos = new CoordinateDProperty<>(this, "mouse_pos");
+	private final CoordinateDProperty mousePos = new CoordinateDProperty(this, "mouse_pos");
 	
-	private final CoordinateProperty<C> mouseover = new CoordinateProperty<>(this, "mouseover");
+	private final CoordinateProperty mouseover = new CoordinateProperty(this, "mouseover");
 	
 	private final TileProperty<T> mouseTile = new TileProperty<>(this, "mouse_tile");
 	
 	private final TileProperty<T> focusTile = new TileProperty<>(this, "focus_tile");
 	
-	public SimpleInputAdapter(TileCanvasStack<L, C, T> canvas)
+	public SimpleInputAdapter(TileCanvasStack<L, T, B> canvas)
 	{
 		this.canvas = canvas;
 		init();
 	}
 	
 	@Override
-	public TileCanvasStack<L, C, T> getCanvasStack()
+	public TileCanvasStack<L, T, B> getCanvasStack()
 	{
 		return canvas;
 	}
 	
 	@Override
-	public CoordinateDProperty<CoordinateD> mousePosProperty()
+	public CoordinateDProperty mousePosProperty()
 	{
 		return mousePos;
 	}
 	
 	@Override
-	public CoordinateProperty<C> mouseoverProperty()
+	public CoordinateProperty mouseoverProperty()
 	{
 		return mouseover;
 	}

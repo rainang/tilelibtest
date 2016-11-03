@@ -1,21 +1,22 @@
 package com.github.rainang.tilelib.input;
 
+import com.github.rainang.tilelib.board.Board;
+import com.github.rainang.tilelib.board.tile.Tile;
 import com.github.rainang.tilelib.canvas.TileCanvasStack;
-import com.github.rainang.tilelib.coordinates.Coordinate;
-import com.github.rainang.tilelib.coordinates.CoordinateD;
 import com.github.rainang.tilelib.layout.Layout;
+import com.github.rainang.tilelib.point.Point;
+import com.github.rainang.tilelib.point.PointD;
 import com.github.rainang.tilelib.properties.CoordinateDProperty;
 import com.github.rainang.tilelib.properties.CoordinateProperty;
 import com.github.rainang.tilelib.properties.TileProperty;
-import com.github.rainang.tilelib.tiles.Tile;
 
-public interface InputAdapter<L extends Layout<C>, C extends Coordinate, T extends Tile>
+public interface InputAdapter<L extends Layout, T extends Tile, B extends Board<T>>
 {
-	TileCanvasStack<L, C, T> getCanvasStack();
+	TileCanvasStack<L, T, B> getCanvasStack();
 	
 	default void init()
 	{
-		getCanvasStack().setOnMouseMoved(e -> mousePosProperty().set(CoordinateD.create(e.getX(), e.getY())));
+		getCanvasStack().setOnMouseMoved(e -> mousePosProperty().set(PointD.create(e.getX(), e.getY())));
 		mousePosProperty().addListener((a, b, c) -> mouseoverProperty().set(getLayout().fromPixel(c)));
 		mouseoverProperty().addListener((a, b, c) -> mouseTileProperty().set(getCanvasStack().getTile(c)));
 		
@@ -29,20 +30,20 @@ public interface InputAdapter<L extends Layout<C>, C extends Coordinate, T exten
 	
 	// PROPERTIES
 	
-	CoordinateDProperty<CoordinateD> mousePosProperty();
+	CoordinateDProperty mousePosProperty();
 	
-	CoordinateProperty<C> mouseoverProperty();
+	CoordinateProperty mouseoverProperty();
 	
 	TileProperty<T> mouseTileProperty();
 	
 	TileProperty<T> focusTileProperty();
 	
-	default CoordinateD getMousePos()
+	default PointD getMousePos()
 	{
 		return mousePosProperty().get();
 	}
 	
-	default Coordinate getMouseover()
+	default Point getMouseover()
 	{
 		return mouseoverProperty().get();
 	}

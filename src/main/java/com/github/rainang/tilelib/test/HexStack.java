@@ -1,14 +1,14 @@
 package com.github.rainang.tilelib.test;
 
+import com.github.rainang.tilelib.board.Board;
+import com.github.rainang.tilelib.board.tile.Tile;
 import com.github.rainang.tilelib.canvas.HexCanvasStack;
-import com.github.rainang.tilelib.coordinates.CoordinateD;
-import com.github.rainang.tilelib.coordinates.HexCoordinate;
 import com.github.rainang.tilelib.input.InputAdapter;
 import com.github.rainang.tilelib.input.SimpleInputAdapter;
 import com.github.rainang.tilelib.layout.HexOrientation;
 import com.github.rainang.tilelib.layout.Layout;
-import com.github.rainang.tilelib.tiles.HexTile;
-import com.github.rainang.tilelib.tiles.HexTileMap;
+import com.github.rainang.tilelib.point.Point;
+import com.github.rainang.tilelib.point.PointD;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-class HexStack extends HexCanvasStack<HexTile>
+class HexStack extends HexCanvasStack<Tile, Board<Tile>>
 {
-	private final InputAdapter<Layout.Hex, HexCoordinate, HexTile> input = new SimpleInputAdapter<>(this);
+	private final InputAdapter<Layout.Hex, Tile, Board<Tile>> input = new SimpleInputAdapter<>(this);
 	
-	private final Map<Integer, List<HexTile>> highlightList = new HashMap<>();
+	private final Map<Integer, List<Tile>> highlightList = new HashMap<>();
 	
 	HexStack()
 	{
@@ -38,8 +38,8 @@ class HexStack extends HexCanvasStack<HexTile>
 		
 		addLayers("Tile", "Mouse", "X", "Y", "Z", "High", "Grid");
 		
-		setLayerRenderListSupplier("Tile", () -> getTiles().values());
-		setLayerRenderListSupplier("Grid", () -> getTiles().values());
+		setLayerRenderListSupplier("Tile", () -> getBoard().getTiles());
+		setLayerRenderListSupplier("Grid", () -> getBoard().getTiles());
 		
 		setLayerFill("Mouse", Color.color(0, 0, 0, 0.5));
 		setLayerFill("X", Color.color(0, 1, 0, 0.25));
@@ -54,24 +54,11 @@ class HexStack extends HexCanvasStack<HexTile>
 		setLayerVisibility("Z", false);
 		setLayerVisibility("Grid", false);
 		
-		HexTileMap<HexTile> m = new HexTileMap<>();
-		TileLibTest.HEX_FINDER.range(HexCoordinate.create(0, 0), 10, c -> m.put(c, new HexTile()
-		{
-			@Override
-			public HexCoordinate getPos()
-			{
-				return c;
-			}
-			
-			@Override
-			public String toString()
-			{
-				return getPos().toString();
-			}
-		}));
-		setTiles(m);
-		
-		setLayout(new Layout.Hex(HexOrientation.POINTY, CoordinateD.create(15, 15), CoordinateD.create(getWidth() /
+		Board.Builder<Tile, Board<Tile>> builder = Board.defaultHexBuilder(Tile::new);
+		builder.getFinder()
+			   .range(Point.createHex(0, 0), 10, builder::addCoordinate);
+		setBoard(builder.build());
+		setLayout(new Layout.Hex(HexOrientation.POINTY, PointD.create(15, 15), PointD.create(getWidth() /
 				2D, getHeight() / 2D), 0.3));
 	}
 	
@@ -94,22 +81,22 @@ class HexStack extends HexCanvasStack<HexTile>
 		paintHighlights();
 	}
 	
-	private Collection<HexTile> getAxisHighlights(int axis, Predicate<HexCoordinate> filter)
+	private Collection<Tile> getAxisHighlights(int axis, Predicate<Point> filter)
 	{
-		HexTile t = input.getMouseTile();
+		Tile t = input.getMouseTile();
 		if (t == null)
 			return highlightList.get(-2);
-		List<HexTile> list = highlightList.get(axis);
+		List<Tile> list = highlightList.get(axis);
 		list.clear();
 		
-		HexCoordinate c;
+		Point c;
 		for (int i = axis; i <= axis + 3; i += 3)
 		{
 			c = t.getPos();
 			while (true)
 			{
-				HexCoordinate c1 = TileLibTest.HEX_FINDER.offset(c, i);
-				if (!getTiles().containsKey(c1))
+				Point c1 = TileLibTest.HEX_FINDER.offset(c, i);
+				if (!getBoard().contains(c1))
 					break;
 				if (filter.test(c1))
 					list.add(getTile(c1));
@@ -119,32 +106,32 @@ class HexStack extends HexCanvasStack<HexTile>
 		return list;
 	}
 	
-	InputAdapter<Layout.Hex, HexCoordinate, HexTile> getInputAdapter()
+	InputAdapter<Layout.Hex, Tile, Board<Tile>> getInputAdapter()
 	{
 		return input;
 	}
 	
-	private boolean equalX(HexTile t1, HexCoordinate t2)
+	private boolean equalX(Tile t1, Point t2)
 	{
 		if (t1 == null || t2 == null)
 			return false;
-		HexCoordinate c1 = t1.getPos();
+		Point c1 = t1.getPos();
 		return c1.x() == t2.x();
 	}
 	
-	private boolean equalY(HexTile t1, HexCoordinate t2)
+	private boolean equalY(Tile t1, Point t2)
 	{
 		if (t1 == null || t2 == null)
 			return false;
-		HexCoordinate c1 = t1.getPos();
+		Point c1 = t1.getPos();
 		return c1.y() == t2.y();
 	}
 	
-	private boolean equalZ(HexTile t1, HexCoordinate t2)
+	private boolean equalZ(Tile t1, Point t2)
 	{
 		if (t1 == null || t2 == null)
 			return false;
-		HexCoordinate c1 = t1.getPos();
+		Point c1 = t1.getPos();
 		return c1.z() == t2.z();
 	}
 	

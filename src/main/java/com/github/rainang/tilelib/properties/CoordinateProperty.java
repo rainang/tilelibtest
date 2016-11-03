@@ -1,13 +1,13 @@
 package com.github.rainang.tilelib.properties;
 
-import com.github.rainang.tilelib.coordinates.Coordinate;
+import com.github.rainang.tilelib.point.Point;
 import javafx.beans.property.SimpleObjectProperty;
 
-public class CoordinateProperty<C extends Coordinate> extends SimpleObjectProperty<C>
+public class CoordinateProperty extends SimpleObjectProperty<Point>
 {
 	public CoordinateProperty() {}
 	
-	public CoordinateProperty(C initialValue)
+	public CoordinateProperty(Point initialValue)
 	{
 		super(initialValue);
 	}
@@ -17,7 +17,7 @@ public class CoordinateProperty<C extends Coordinate> extends SimpleObjectProper
 		super(bean, name);
 	}
 	
-	public CoordinateProperty(Object bean, String name, C initialValue)
+	public CoordinateProperty(Object bean, String name, Point initialValue)
 	{
 		super(bean, name, initialValue);
 	}

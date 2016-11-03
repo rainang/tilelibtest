@@ -1,13 +1,13 @@
 package com.github.rainang.tilelib.properties;
 
-import com.github.rainang.tilelib.coordinates.CoordinateD;
+import com.github.rainang.tilelib.point.PointD;
 import javafx.beans.property.SimpleObjectProperty;
 
-public class CoordinateDProperty<C extends CoordinateD> extends SimpleObjectProperty<C>
+public class CoordinateDProperty extends SimpleObjectProperty<PointD>
 {
 	public CoordinateDProperty() {}
 	
-	public CoordinateDProperty(C initialValue)
+	public CoordinateDProperty(PointD initialValue)
 	{
 		super(initialValue);
 	}
@@ -17,7 +17,7 @@ public class CoordinateDProperty<C extends CoordinateD> extends SimpleObjectProp
 		super(bean, name);
 	}
 	
-	public CoordinateDProperty(Object bean, String name, C initialValue)
+	public CoordinateDProperty(Object bean, String name, PointD initialValue)
 	{
 		super(bean, name, initialValue);
 	}

@@ -1,9 +1,9 @@
 package com.github.rainang.tilelib.canvas;
 
-import com.github.rainang.tilelib.coordinates.Coordinate;
+import com.github.rainang.tilelib.board.Board;
+import com.github.rainang.tilelib.board.tile.Tile;
 import com.github.rainang.tilelib.layout.Layout;
-import com.github.rainang.tilelib.tiles.Tile;
-import com.github.rainang.tilelib.tiles.TileMapBase;
+import com.github.rainang.tilelib.point.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -14,11 +14,11 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class TileCanvasStack<L extends Layout, C extends Coordinate, T extends Tile> extends StackPane
+public class TileCanvasStack<L extends Layout, T extends Tile, B extends Board<T>> extends StackPane
 {
-	private Map<String, TileCanvas<C, T>> layers = new HashMap<>();
+	private Map<String, TileCanvas<T>> layers = new HashMap<>();
 	
-	TileMapBase<C, T> tiles;
+	B board;
 	
 	L layout;
 	
@@ -35,9 +35,9 @@ public class TileCanvasStack<L extends Layout, C extends Coordinate, T extends T
 	
 	// TILES
 	
-	public T getTile(C c)
+	public T getTile(Point c)
 	{
-		return tiles.get(c);
+		return board.getTile(c);
 	}
 	
 	// LAYERING
@@ -50,7 +50,7 @@ public class TileCanvasStack<L extends Layout, C extends Coordinate, T extends T
 	
 	public void addLayer(String name)
 	{
-		TileCanvas<C, T> layer = new TileCanvas<>(name, getWidth(), getHeight());
+		TileCanvas<T> layer = new TileCanvas<>(name, getWidth(), getHeight());
 		layer.setPainter(getDefaultPainter());
 		layers.put(layer.getName(), layer);
 		getChildren().add(layer);
@@ -64,12 +64,12 @@ public class TileCanvasStack<L extends Layout, C extends Coordinate, T extends T
 	
 	public void removeLayer(String name)
 	{
-		TileCanvas<C, T> layer = layers.remove(name);
+		TileCanvas<T> layer = layers.remove(name);
 		if (layer != null)
 			getChildren().remove(layer);
 	}
 	
-	public TileCanvas<C, T> getLayer(String name)
+	public TileCanvas<T> getLayer(String name)
 	{
 		return layers.get(name);
 	}
@@ -110,14 +110,14 @@ public class TileCanvasStack<L extends Layout, C extends Coordinate, T extends T
 	
 	// GETTERS & SETTERS
 	
-	public TileMapBase<C, T> getTiles()
+	public B getBoard()
 	{
-		return tiles;
+		return board;
 	}
 	
-	public void setTiles(TileMapBase<C, T> tiles)
+	public void setBoard(B board)
 	{
-		this.tiles = tiles;
+		this.board = board;
 		paint();
 	}
 	
@@ -144,7 +144,7 @@ public class TileCanvasStack<L extends Layout, C extends Coordinate, T extends T
 	
 	public boolean canPaint()
 	{
-		return tiles != null && layout != null;
+		return board != null && layout != null;
 	}
 	
 	public void paint()

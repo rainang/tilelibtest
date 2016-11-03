@@ -1,9 +1,8 @@
 package com.github.rainang.tilelib.control;
 
-import com.github.rainang.tilelib.coordinates.Coordinate;
-import com.github.rainang.tilelib.coordinates.CoordinateD;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import com.github.rainang.tilelib.point.Point;
+import com.github.rainang.tilelib.point.PointD;
+import com.github.rainang.tilelib.properties.CoordinateProperty;
 import javafx.scene.layout.HBox;
 
 import static java.lang.Math.max;
@@ -11,18 +10,18 @@ import static java.lang.Math.min;
 
 public class CoordinateField extends HBox
 {
-	private ObjectProperty<Coordinate> coordinate = new SimpleObjectProperty<>();
+	private CoordinateProperty coordinate = new CoordinateProperty();
 	
 	private final IntField fldX;
 	private final IntField fldY;
 	
-	public CoordinateField(Coordinate coordinate, int minValue, int maxValue)
+	public CoordinateField(Point point, int minValue, int maxValue)
 	{
-		getStyleClass().add("coordinate-field");
+		getStyleClass().add("point-field");
 		
-		this.coordinate.set(coordinate);
-		this.fldX = new IntField(min(coordinate.x(), minValue), max(coordinate.x(), maxValue), coordinate.x());
-		this.fldY = new IntField(min(coordinate.y(), minValue), max(coordinate.y(), maxValue), coordinate.y());
+		this.coordinate.set(point);
+		this.fldX = new IntField(min(point.x(), minValue), max(point.x(), maxValue), point.x());
+		this.fldY = new IntField(min(point.y(), minValue), max(point.y(), maxValue), point.y());
 		
 		fldX.valueProperty()
 			.addListener(j -> updateCoordinates());
@@ -32,35 +31,34 @@ public class CoordinateField extends HBox
 		getChildren().addAll(fldX, fldY);
 	}
 	
-	public CoordinateField(Coordinate coordinate)
+	public CoordinateField(Point point)
 	{
-		this(coordinate, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		this(point, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 	
 	public CoordinateField()
 	{
-		this(Coordinate.ORIGIN, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		this(Point.ORIGIN, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 	
 	private void updateCoordinates()
 	{
-		coordinate.set(Coordinate.create(fldX.getValue(), fldY.getValue()));
+		coordinate.set(Point.create(fldX.getValue(), fldY.getValue()));
 	}
 	
-	public ObjectProperty<Coordinate> coordinateProperty()
+	public CoordinateProperty coordinateProperty()
 	{
 		return coordinate;
 	}
 	
-	public Coordinate getCoordinate()
+	public Point getCoordinate()
 	{
 		return coordinate.get();
 	}
 	
-	public CoordinateD getCoordinateD()
+	public PointD getCoordinateD()
 	{
-		Coordinate c = coordinate.get();
-		return CoordinateD.create(c.x(), c.y());
+		return getCoordinate().asDouble();
 	}
 	
 	public int getValueX()

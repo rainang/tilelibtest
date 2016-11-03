@@ -1,9 +1,9 @@
 package com.github.rainang.tilelib.test;
 
+import com.github.rainang.tilelib.board.tile.Tile;
 import com.github.rainang.tilelib.control.IntField;
 import com.github.rainang.tilelib.control.LabeledNode;
-import com.github.rainang.tilelib.coordinates.HexCoordinate;
-import com.github.rainang.tilelib.tiles.HexTile;
+import com.github.rainang.tilelib.point.Point;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 abstract class ShapeControlPane extends VBox
 {
-	ChangeListener<HexTile> focusChangeListener;
+	ChangeListener<Tile> focusChangeListener;
 	
 	final IntField range1;
 	final IntField range2;
@@ -71,22 +71,22 @@ abstract class ShapeControlPane extends VBox
 	
 	boolean createMap(HexStack canvas)
 	{
-		HexTile tile = canvas.getInputAdapter()
-							 .getFocusTile();
+		Tile tile = canvas.getInputAdapter()
+						  .getFocusTile();
 		if (tile == null)
 			return false;
-		List<HexCoordinate> filter = new ArrayList<>();
+		List<Point> filter = new ArrayList<>();
 		search(tile.getPos(), filter::add);
-		List<HexTile> list = filter.stream()
-								   .map(canvas::getTile)
-								   .filter(t -> t != null)
-								   .collect(Collectors.toList());
+		List<Tile> list = filter.stream()
+								.map(canvas::getTile)
+								.filter(t -> t != null)
+								.collect(Collectors.toList());
 		canvas.setLayerRenderListSupplier("High", () -> list);
 		canvas.paintHighlights();
 		return true;
 	}
 	
-	abstract void search(HexCoordinate h, Consumer<HexCoordinate> consumer);
+	abstract void search(Point h, Consumer<Point> consumer);
 	
 	void init(HexStack canvas)
 	{
@@ -109,7 +109,7 @@ abstract class ShapeControlPane extends VBox
 		return new ShapeControlPane(canvas, 0)
 		{
 			@Override
-			void search(HexCoordinate h, Consumer<HexCoordinate> consumer)
+			void search(Point h, Consumer<Point> consumer)
 			{
 				TileLibTest.HEX_FINDER.range(h, range1.getValue(), consumer);
 			}
@@ -121,9 +121,9 @@ abstract class ShapeControlPane extends VBox
 		return new ShapeControlPane(canvas, 1)
 		{
 			@Override
-			void search(HexCoordinate h, Consumer<HexCoordinate> consumer)
+			void search(Point h, Consumer<Point> consumer)
 			{
-				TileLibTest.HEX_FINDER.triangle(h, range1.getValue(), orient.getValue(), consumer);
+				TileLibTest.HEX_FINDER.fan(h, range1.getValue(), orient.getValue(), consumer);
 			}
 		};
 	}
@@ -133,7 +133,7 @@ abstract class ShapeControlPane extends VBox
 		return new ShapeControlPane(canvas, 3)
 		{
 			@Override
-			void search(HexCoordinate h, Consumer<HexCoordinate> consumer)
+			void search(Point h, Consumer<Point> consumer)
 			{
 				TileLibTest.HEX_FINDER.rectangle(h, range1.getValue(), range2.getValue(), orient.getValue(), consumer);
 			}
@@ -145,7 +145,7 @@ abstract class ShapeControlPane extends VBox
 		return new ShapeControlPane(canvas, 3)
 		{
 			@Override
-			void search(HexCoordinate h, Consumer<HexCoordinate> consumer)
+			void search(Point h, Consumer<Point> consumer)
 			{
 				TileLibTest.HEX_FINDER.parallelogram(h, range1.getValue(), range2.getValue(), orient.getValue(),
 						consumer);
@@ -160,7 +160,7 @@ abstract class ShapeControlPane extends VBox
 		return new ShapeControlPane(canvas, type)
 		{
 			@Override
-			void search(HexCoordinate h, Consumer<HexCoordinate> consumer)
+			void search(Point h, Consumer<Point> consumer)
 			{
 				if (type.getText()
 						.equals("Ring"))
@@ -173,10 +173,10 @@ abstract class ShapeControlPane extends VBox
 	
 	private static abstract class TwoPointPane extends ShapeControlPane
 	{
-		ChangeListener<HexTile> mouseChangeListener;
+		ChangeListener<Tile> mouseChangeListener;
 		
-		HexCoordinate h1;
-		HexCoordinate h2;
+		Point h1;
+		Point h2;
 		
 		private TwoPointPane(HexStack canvas, int type)
 		{
@@ -224,7 +224,7 @@ abstract class ShapeControlPane extends VBox
 		return new TwoPointPane(canvas, 2)
 		{
 			@Override
-			void search(HexCoordinate h, Consumer<HexCoordinate> consumer)
+			void search(Point h, Consumer<Point> consumer)
 			{
 				if (h1 != null)
 					TileLibTest.HEX_FINDER.range(h1, range1.getValue(), consumer);
@@ -241,7 +241,7 @@ abstract class ShapeControlPane extends VBox
 		return new TwoPointPane(canvas, 4)
 		{
 			@Override
-			void search(HexCoordinate h, Consumer<HexCoordinate> consumer)
+			void search(Point h, Consumer<Point> consumer)
 			{
 				if (h1 != null && h2 != null)
 					TileLibTest.HEX_FINDER.line(h1, h2, consumer);

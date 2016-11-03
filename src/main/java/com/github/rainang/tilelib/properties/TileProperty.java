@@ -1,6 +1,6 @@
 package com.github.rainang.tilelib.properties;
 
-import com.github.rainang.tilelib.tiles.Tile;
+import com.github.rainang.tilelib.board.tile.Tile;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class TileProperty<T extends Tile> extends SimpleObjectProperty<T>

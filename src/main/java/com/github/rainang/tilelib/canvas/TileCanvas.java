@@ -1,7 +1,6 @@
 package com.github.rainang.tilelib.canvas;
 
-import com.github.rainang.tilelib.coordinates.Coordinate;
-import com.github.rainang.tilelib.tiles.Tile;
+import com.github.rainang.tilelib.board.tile.Tile;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,7 +12,7 @@ import java.util.Collections;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class TileCanvas<C extends Coordinate, T extends Tile> extends Canvas
+public class TileCanvas<T extends Tile> extends Canvas
 {
 	private final String name;
 	
